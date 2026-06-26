@@ -19,6 +19,8 @@ from src.scenes.artists_menu import ArtistsMenu
 from src.scenes.albums_menu import AlbumsMenu
 from src.scenes.artist_albums_menu import ArtistAlbumsMenu
 from src.scenes.album_tracks_menu import AlbumTracksMenu
+from src.scenes.boot_splash import BootSplash
+from src.scenes.about_scene import AboutScene
 from src.scenes.stub_menu import StubMenu
 
 FPS = 60
@@ -37,6 +39,7 @@ def main():
     state.artists, state.albums = build_index(state.tracks)
 
     manager = SceneManager()
+    manager.register("boot_splash",    BootSplash(manager, fonts))
     manager.register("main_menu",      MainMenu(manager, fonts))
     manager.register("music_menu",     MusicMenu(manager, fonts))
     manager.register("extras_menu",    ExtrasMenu(manager, fonts))
@@ -49,8 +52,9 @@ def main():
     manager.register("artist_albums",  ArtistAlbumsMenu(manager, fonts))
     manager.register("album_tracks",   AlbumTracksMenu(manager, fonts))
     manager.register("playlists_menu", StubMenu(manager, fonts, "Playlists"))
+    manager.register("about",          AboutScene(manager, fonts))
 
-    manager.switch("main_menu", push_history=False)
+    manager.switch("boot_splash", push_history=False)
 
     while True:
         for event in pygame.event.get():
