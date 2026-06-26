@@ -45,7 +45,7 @@ class MainMenu(MenuScene):
         if dest:
             self.manager.switch(dest)
 
-    def draw_panel(self, surface):
+    def draw_panel(self, surface, playing=None, track=None):
         cx = t.PANEL_X + t.PANEL_W // 2
         cy = t.HEADER_H + (t.SCREEN_H - t.HEADER_H) // 2
         # Simple Game Boy pixel-art style icon placeholder
