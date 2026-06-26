@@ -44,10 +44,7 @@ class AlbumsMenu(MenuScene):
         if art:
             surface.blit(art, art_rect.topleft)
         else:
-            pygame.draw.rect(surface, t.BG, art_rect, border_radius=4)
-            note = self.fonts["header"].render("♪", True, t.TEXT_DIM)
-            surface.blit(note, (art_rect.centerx - note.get_width() // 2,
-                                art_rect.centery - note.get_height() // 2))
+            t.draw_art_placeholder(surface, art_rect)
 
         # Album name
         label_y = art_rect.bottom + 8

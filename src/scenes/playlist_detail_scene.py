@@ -55,7 +55,7 @@ class PlaylistDetailScene(MenuScene):
         toast.show(f'Deleted "{name}"')
         self.manager.switch("playlists_menu", push_history=False)
 
-    def draw_panel(self, surface):
+    def draw_panel(self, surface, playing=None, track=None):
         if not self.playlist:
             return
         cx = t.PANEL_X + t.PANEL_W // 2
