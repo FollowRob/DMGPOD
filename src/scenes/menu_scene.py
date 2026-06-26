@@ -112,11 +112,12 @@ class MenuScene(BaseScene):
         for i, item in enumerate(visible):
             abs_i = self.scroll + i
             y = list_top + i * ITEM_H
+            hi_rect = (0, y - 4, list_w, ITEM_H)
 
             if abs_i == self.selected:
-                pygame.draw.rect(surface, t.HIGHLIGHT, (0, y - 4, list_w, ITEM_H))
+                t.draw_highlight(surface, hi_rect)
 
-            color = t.TEXT if abs_i == self.selected else t.TEXT_DIM
+            color = t.TEXT_HI if abs_i == self.selected else t.TEXT
             label = self.fonts["item"].render(item, True, color)
             surface.blit(label, (16, y + ITEM_H // 2 - label.get_height() // 2 - 4))
 
@@ -142,6 +143,8 @@ class MenuScene(BaseScene):
     def _draw_mini_player(self, surface, track):
         px = t.PANEL_X
         pw = t.PANEL_W
+        col_text = t.TEXT
+        col_dim = t.TEXT_DIM
 
         # Album art
         art_size = pw - 16
@@ -164,8 +167,8 @@ class MenuScene(BaseScene):
 
         # Clip long text
         for text, font_key, color in [
-            (track.title,  "small", t.TEXT),
-            (track.artist, "small", t.TEXT_DIM),
+            (track.title,  "small", col_text),
+            (track.artist, "small", col_dim),
         ]:
             s = self.fonts[font_key].render(text, True, color)
             clip = pygame.Rect(info_x, info_y, info_w, s.get_height())
@@ -180,6 +183,5 @@ class MenuScene(BaseScene):
         pygame.draw.rect(surface, t.DIVIDER, (info_x, bar_y, info_w, 2))
         pygame.draw.rect(surface, t.HIGHLIGHT, (info_x, bar_y, int(info_w * progress), 2))
 
-        # Play indicator dot
-        dot_col = t.HIGHLIGHT if state.player.is_playing else t.TEXT_DIM
+        dot_col = t.HIGHLIGHT if state.player.is_playing else col_dim
         pygame.draw.circle(surface, dot_col, (px + pw // 2, bar_y + 10), 3)

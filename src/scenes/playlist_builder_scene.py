@@ -102,15 +102,15 @@ class PlaylistBuilderScene(BaseScene):
             in_list = track.path in self._added
 
             if abs_i == self._selected:
-                pygame.draw.rect(surface, t.HIGHLIGHT, (0, y, t.SCREEN_W, ITEM_H))
+                t.draw_highlight(surface, (0, y, t.SCREEN_W, ITEM_H))
 
-            col = t.TEXT if abs_i == self._selected else t.TEXT_DIM
+            col = t.TEXT_HI if abs_i == self._selected else t.TEXT
 
             # Checkbox
             box_x, box_y = 10, y + ITEM_H // 2 - 6
             pygame.draw.rect(surface, col, (box_x, box_y, 12, 12), 1, border_radius=2)
             if in_list:
-                pygame.draw.rect(surface, t.HIGHLIGHT if abs_i != self._selected else t.TEXT,
+                pygame.draw.rect(surface, t.TEXT_HI if abs_i == self._selected else t.HIGHLIGHT,
                                  (box_x + 2, box_y + 2, 8, 8), border_radius=1)
 
             label = self.fonts["small"].render(
