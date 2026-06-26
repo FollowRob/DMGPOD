@@ -7,6 +7,9 @@ class SceneManager:
     def register(self, name, scene):
         self._scenes[name] = scene
 
+    def get(self, name):
+        return self._scenes.get(name)
+
     def switch(self, name, push_history=True):
         if name not in self._scenes:
             return

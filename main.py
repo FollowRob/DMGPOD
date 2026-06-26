@@ -22,7 +22,10 @@ from src.scenes.artist_albums_menu import ArtistAlbumsMenu
 from src.scenes.album_tracks_menu import AlbumTracksMenu
 from src.scenes.boot_splash import BootSplash
 from src.scenes.about_scene import AboutScene
-from src.scenes.stub_menu import StubMenu
+from src.scenes.playlists_menu import PlaylistsMenu
+from src.scenes.name_entry_scene import NameEntryScene
+from src.scenes.playlist_builder_scene import PlaylistBuilderScene
+from src.scenes.playlist_detail_scene import PlaylistDetailScene
 
 FPS = 60
 MUSIC_DIR = os.path.join(os.path.dirname(__file__), "music")
@@ -52,7 +55,10 @@ def main():
     manager.register("albums_menu",    AlbumsMenu(manager, fonts))
     manager.register("artist_albums",  ArtistAlbumsMenu(manager, fonts))
     manager.register("album_tracks",   AlbumTracksMenu(manager, fonts))
-    manager.register("playlists_menu", StubMenu(manager, fonts, "Playlists"))
+    manager.register("playlists_menu",   PlaylistsMenu(manager, fonts))
+    manager.register("name_entry",       NameEntryScene(manager, fonts))
+    manager.register("playlist_builder", PlaylistBuilderScene(manager, fonts))
+    manager.register("playlist_detail",  PlaylistDetailScene(manager, fonts))
     manager.register("about",          AboutScene(manager, fonts))
 
     manager.switch("boot_splash", push_history=False)
