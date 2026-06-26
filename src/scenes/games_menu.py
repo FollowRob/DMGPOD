@@ -5,8 +5,8 @@ class GamesMenu(MenuScene):
     title = "Games"
 
     def items(self):
-        return ["Launch RetroArch", "Recent Games"]
+        return ["Browse ROMs"]
 
     def on_select(self, index, item):
-        if item == "Launch RetroArch":
-            self.manager.switch("retroarch_launcher")
+        if item == "Browse ROMs":
+            self.manager.switch("rom_browser")
