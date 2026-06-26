@@ -12,11 +12,12 @@ MAX_VISIBLE = (t.SCREEN_H - LIST_TOP - 24) // ITEM_H
 
 
 class PlaylistBuilderScene(BaseScene):
-    """Song picker. Set .playlist_name before switching."""
+    """Song picker. Set .playlist_name and optionally .existing_playlist before switching."""
 
     def __init__(self, manager, fonts):
         super().__init__(manager, fonts)
         self.playlist_name = ""
+        self.existing_playlist = None   # set to edit an existing playlist
         self._selected = 0
         self._scroll = 0
         self._added = set()   # track paths
@@ -24,7 +25,10 @@ class PlaylistBuilderScene(BaseScene):
     def on_enter(self):
         self._selected = 0
         self._scroll = 0
-        self._added = set()
+        if self.existing_playlist:
+            self._added = set(self.existing_playlist.get("tracks", []))
+        else:
+            self._added = set()
 
     def handle_event(self, event):
         btn = get_button(event)
@@ -62,14 +66,13 @@ class PlaylistBuilderScene(BaseScene):
             toast.show("Add at least one track")
             return
         tracks = state.tracks
-        ordered = [t.path for t in tracks if t.path in self._added]
-        playlist = {
-            "name": self.playlist_name,
-            "tracks": ordered,
-        }
+        ordered = [tr.path for tr in tracks if tr.path in self._added]
+        playlist = dict(self.existing_playlist) if self.existing_playlist else {}
+        playlist["name"] = self.playlist_name
+        playlist["tracks"] = ordered
         save_playlist(playlist)
+        self.existing_playlist = None
         toast.show(f'Saved "{self.playlist_name}"')
-        # Return to playlists menu (pop name entry + builder)
         self.manager.switch("playlists_menu", push_history=False)
 
     def update(self):
