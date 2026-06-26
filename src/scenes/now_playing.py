@@ -19,14 +19,25 @@ def _scale_art(raw_bytes, size):
         return None
 
 
+_SCROLL_SPEED = 30   # pixels per second
+_SCROLL_PAUSE = 1500  # ms pause at each end
+
+
 class NowPlaying(BaseScene):
 
     def __init__(self, manager, fonts):
         super().__init__(manager, fonts)
         self._art_cache = {}   # path -> surface or None
+        self._scroll_x = 0.0
+        self._scroll_dir = 1
+        self._scroll_wait = 0
+        self._last_title = None
 
     def on_enter(self):
-        pass
+        self._scroll_x = 0.0
+        self._scroll_dir = 1
+        self._scroll_wait = _SCROLL_PAUSE
+        self._last_title = None
 
     def handle_event(self, event):
         btn = get_button(event)
@@ -56,7 +67,45 @@ class NowPlaying(BaseScene):
             state.player.seek(0)
 
     def update(self):
-        pass
+        import pygame
+        track = state.queue[state.queue_index] if state.queue else None
+        title = track.title if track else ""
+        if title != self._last_title:
+            self._last_title = title
+            self._scroll_x = 0.0
+            self._scroll_dir = 1
+            self._scroll_wait = _SCROLL_PAUSE
+
+        dt = pygame.time.get_ticks()
+        if not hasattr(self, "_last_tick"):
+            self._last_tick = dt
+        delta_ms = dt - self._last_tick
+        self._last_tick = dt
+
+        title_surf = self.fonts["header"].render(title, True, (255, 255, 255))
+        info_x, info_w = self._info_bounds()
+        overflow = title_surf.get_width() - info_w
+        if overflow > 0:
+            if self._scroll_wait > 0:
+                self._scroll_wait -= delta_ms
+            else:
+                self._scroll_x += self._scroll_dir * _SCROLL_SPEED * delta_ms / 1000.0
+                if self._scroll_x >= overflow:
+                    self._scroll_x = overflow
+                    self._scroll_dir = -1
+                    self._scroll_wait = _SCROLL_PAUSE
+                elif self._scroll_x <= 0:
+                    self._scroll_x = 0.0
+                    self._scroll_dir = 1
+                    self._scroll_wait = _SCROLL_PAUSE
+        else:
+            self._scroll_x = 0.0
+
+    def _info_bounds(self):
+        art_size = t.SCREEN_H - t.HEADER_H - 16
+        info_x = 8 + art_size + 10
+        info_w = t.SCREEN_W - info_x - 6
+        return info_x, info_w
 
     def _get_art(self, track, size):
         if track is None:
@@ -112,7 +161,12 @@ class NowPlaying(BaseScene):
         artist_str = track.artist if track else "Unknown Artist"
         album_str  = track.album  if track else "Unknown Album"
 
-        surface.blit(self.fonts["header"].render(title_str,  True, t.TEXT),     (info_x, info_y))
+        title_surf = self.fonts["header"].render(title_str, True, t.TEXT)
+        clip = pygame.Rect(info_x, info_y, info_w, title_surf.get_height())
+        surface.set_clip(clip)
+        surface.blit(title_surf, (info_x - int(self._scroll_x), info_y))
+        surface.set_clip(None)
+
         surface.blit(self.fonts["small"].render(artist_str,  True, t.TEXT_DIM), (info_x, info_y + 18))
         surface.blit(self.fonts["small"].render(album_str,   True, t.TEXT_DIM), (info_x, info_y + 32))
 

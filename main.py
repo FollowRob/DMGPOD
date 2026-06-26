@@ -8,6 +8,7 @@ from src.library.scanner import scan, build_index
 from src.scene_manager import SceneManager
 from src.toast import toast
 import src.cart as cart
+import src.volume_overlay as vol
 from src.scenes.main_menu import MainMenu
 from src.scenes.music_menu import MusicMenu
 from src.scenes.extras_menu import ExtrasMenu
@@ -21,7 +22,10 @@ from src.scenes.artist_albums_menu import ArtistAlbumsMenu
 from src.scenes.album_tracks_menu import AlbumTracksMenu
 from src.scenes.boot_splash import BootSplash
 from src.scenes.about_scene import AboutScene
-from src.scenes.stub_menu import StubMenu
+from src.scenes.playlists_menu import PlaylistsMenu
+from src.scenes.name_entry_scene import NameEntryScene
+from src.scenes.playlist_builder_scene import PlaylistBuilderScene
+from src.scenes.playlist_detail_scene import PlaylistDetailScene
 
 FPS = 60
 MUSIC_DIR = os.path.join(os.path.dirname(__file__), "music")
@@ -51,7 +55,10 @@ def main():
     manager.register("albums_menu",    AlbumsMenu(manager, fonts))
     manager.register("artist_albums",  ArtistAlbumsMenu(manager, fonts))
     manager.register("album_tracks",   AlbumTracksMenu(manager, fonts))
-    manager.register("playlists_menu", StubMenu(manager, fonts, "Playlists"))
+    manager.register("playlists_menu",   PlaylistsMenu(manager, fonts))
+    manager.register("name_entry",       NameEntryScene(manager, fonts))
+    manager.register("playlist_builder", PlaylistBuilderScene(manager, fonts))
+    manager.register("playlist_detail",  PlaylistDetailScene(manager, fonts))
     manager.register("about",          AboutScene(manager, fonts))
 
     manager.switch("boot_splash", push_history=False)
@@ -63,11 +70,18 @@ def main():
                 pygame.quit()
                 sys.exit()
             cart.handle_event(event, manager)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFTBRACKET:
+                    vol.bump(-0.05)
+                elif event.key == pygame.K_RIGHTBRACKET:
+                    vol.bump(0.05)
             manager.handle_event(event)
 
         manager.update()
         manager.draw(screen)
+        t.draw_battery(screen, fonts)
         toast.draw(screen, fonts)
+        vol.draw(screen, fonts)
         pygame.display.flip()
         clock.tick(FPS)
 

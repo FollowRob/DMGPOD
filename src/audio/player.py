@@ -13,6 +13,7 @@ class Player:
         self._playing = False
         self._stopping = False   # suppresses finished_callback on manual stop
         self._stream = None
+        self._volume = 0.8
         self.on_track_end = None  # callback
 
     # ------------------------------------------------------------------
@@ -98,6 +99,9 @@ class Player:
                 self._pos = max(0, min(int(seconds * self._samplerate), len(self._data) - 1))
 
     # ------------------------------------------------------------------
+    def set_volume(self, v):
+        self._volume = max(0.0, min(1.0, v))
+
     def _callback(self, outdata, frames, time, status):
         with self._lock:
             if self._data is None or not self._playing:
@@ -106,11 +110,11 @@ class Player:
             end = self._pos + frames
             chunk = self._data[self._pos:end]
             if len(chunk) < frames:
-                outdata[:len(chunk)] = chunk
+                outdata[:len(chunk)] = chunk * self._volume
                 outdata[len(chunk):] = 0
                 self._playing = False
             else:
-                outdata[:] = chunk
+                outdata[:] = chunk * self._volume
             self._pos = min(end, len(self._data))
 
     def _finished(self):
