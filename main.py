@@ -1,7 +1,10 @@
 import pygame
 import sys
+import os
 
 import src.theme as t
+import src.state as state
+from src.library.scanner import scan, build_index
 from src.scene_manager import SceneManager
 from src.scenes.main_menu import MainMenu
 from src.scenes.music_menu import MusicMenu
@@ -9,9 +12,15 @@ from src.scenes.extras_menu import ExtrasMenu
 from src.scenes.settings_menu import SettingsMenu
 from src.scenes.games_menu import GamesMenu
 from src.scenes.now_playing import NowPlaying
+from src.scenes.songs_menu import SongsMenu
+from src.scenes.artists_menu import ArtistsMenu
+from src.scenes.albums_menu import AlbumsMenu
+from src.scenes.artist_albums_menu import ArtistAlbumsMenu
+from src.scenes.album_tracks_menu import AlbumTracksMenu
 from src.scenes.stub_menu import StubMenu
 
 FPS = 60
+MUSIC_DIR = os.path.join(os.path.dirname(__file__), "music")
 
 
 def main():
@@ -21,17 +30,23 @@ def main():
     clock = pygame.time.Clock()
 
     fonts = t.load_fonts()
-    manager = SceneManager()
 
-    manager.register("main_menu",     MainMenu(manager, fonts))
-    manager.register("music_menu",    MusicMenu(manager, fonts))
-    manager.register("extras_menu",   ExtrasMenu(manager, fonts))
-    manager.register("settings_menu", SettingsMenu(manager, fonts))
-    manager.register("games_menu",    GamesMenu(manager, fonts))
-    manager.register("now_playing",   NowPlaying(manager, fonts))
-    manager.register("artists_menu",  StubMenu(manager, fonts, "Artists"))
-    manager.register("albums_menu",   StubMenu(manager, fonts, "Albums"))
-    manager.register("songs_menu",    StubMenu(manager, fonts, "Songs"))
+    # Scan music library
+    state.tracks = scan(MUSIC_DIR)
+    state.artists, state.albums = build_index(state.tracks)
+
+    manager = SceneManager()
+    manager.register("main_menu",      MainMenu(manager, fonts))
+    manager.register("music_menu",     MusicMenu(manager, fonts))
+    manager.register("extras_menu",    ExtrasMenu(manager, fonts))
+    manager.register("settings_menu",  SettingsMenu(manager, fonts))
+    manager.register("games_menu",     GamesMenu(manager, fonts))
+    manager.register("now_playing",    NowPlaying(manager, fonts))
+    manager.register("songs_menu",     SongsMenu(manager, fonts))
+    manager.register("artists_menu",   ArtistsMenu(manager, fonts))
+    manager.register("albums_menu",    AlbumsMenu(manager, fonts))
+    manager.register("artist_albums",  ArtistAlbumsMenu(manager, fonts))
+    manager.register("album_tracks",   AlbumTracksMenu(manager, fonts))
     manager.register("playlists_menu", StubMenu(manager, fonts, "Playlists"))
 
     manager.switch("main_menu", push_history=False)
@@ -39,9 +54,9 @@ def main():
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                state.player.stop()
                 pygame.quit()
                 sys.exit()
-
             manager.handle_event(event)
 
         manager.update()
