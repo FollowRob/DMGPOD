@@ -122,8 +122,8 @@ class RomBrowserScene(BaseScene):
                                  (12, y + ITEM_H - 1), (t.SCREEN_W - 12, y + ITEM_H - 1))
             else:
                 if abs_i == self._selected:
-                    pygame.draw.rect(surface, t.HIGHLIGHT, (0, y, t.SCREEN_W, ITEM_H))
-                col = t.TEXT if abs_i == self._selected else t.TEXT_DIM
+                    t.draw_highlight(surface, (0, y, t.SCREEN_W, ITEM_H))
+                col = t.TEXT_HI if abs_i == self._selected else t.TEXT
                 s = self.fonts["item"].render(label, True, col)
                 surface.blit(s, (24, y + ITEM_H // 2 - s.get_height() // 2))
 

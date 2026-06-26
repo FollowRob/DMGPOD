@@ -44,7 +44,7 @@ class Toast:
         x = t.SCREEN_W // 2 - w // 2
 
         bg = pygame.Surface((w, h), pygame.SRCALPHA)
-        bg.fill((40, 40, 40, int(alpha * 0.92)))
+        bg.fill((255, 255, 255, int(alpha * 0.95)))
         pygame.draw.rect(bg, (*t.HIGHLIGHT, alpha), bg.get_rect(), 1, border_radius=6)
         surface.blit(bg, (x, TOAST_Y))
 
