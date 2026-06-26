@@ -1,6 +1,6 @@
 # DMGPod — Development Plan v1.0
 
-> A Game Boy DMG housing a Raspberry Pi Zero 2W running an iPod-inspired music player with cartridge-based playlists and retro game launching via RetroArch. UI inspired by the iPod classic 6th gen layout, adapted for 320×240 landscape.
+> A Game Boy DMG housing a Raspberry Pi Zero 2W running an iPod-inspired music player with cartridge-based playlists and retro game launching via RetroArch. UI inspired by the iPod classic 6th gen layout, adapted for 320×240 landscape. A vibe coded application utilising Claude.
 
 | | |
 |---|---|
