@@ -6,6 +6,8 @@ import src.theme as t
 import src.state as state
 from src.library.scanner import scan, build_index
 from src.scene_manager import SceneManager
+from src.toast import toast
+import src.cart as cart
 from src.scenes.main_menu import MainMenu
 from src.scenes.music_menu import MusicMenu
 from src.scenes.extras_menu import ExtrasMenu
@@ -31,7 +33,6 @@ def main():
 
     fonts = t.load_fonts()
 
-    # Scan music library
     state.tracks = scan(MUSIC_DIR)
     state.artists, state.albums = build_index(state.tracks)
 
@@ -57,10 +58,12 @@ def main():
                 state.player.stop()
                 pygame.quit()
                 sys.exit()
+            cart.handle_event(event, manager)
             manager.handle_event(event)
 
         manager.update()
         manager.draw(screen)
+        toast.draw(screen, fonts)
         pygame.display.flip()
         clock.tick(FPS)
 
