@@ -4,7 +4,6 @@ from src.input import get_button
 import src.theme as t
 
 
-
 class MainMenu(MenuScene):
     title = "DMGPod"
 
@@ -15,7 +14,7 @@ class MainMenu(MenuScene):
     def items(self):
         base = ["Music"]
         if self.games_unlocked:
-            base.append("Games  Unlocked")
+            base.append("Games")
         base += ["Extras", "Settings"]
         return base
 
@@ -38,7 +37,7 @@ class MainMenu(MenuScene):
     def on_select(self, index, item):
         destinations = {
             "Music":           "music_menu",
-            "Games  Unlocked": "games_menu",
+            "Games":           "games_menu",
             "Extras":          "extras_menu",
             "Settings":        "settings_menu",
         }
