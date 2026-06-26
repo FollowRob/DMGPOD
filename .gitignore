@@ -1,0 +1,12 @@
+# Music & media
+music/
+roms/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+
+# macOS
+.DS_Store
