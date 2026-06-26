@@ -18,11 +18,13 @@ class PlaylistDetailScene(MenuScene):
         return self.playlist["name"] if self.playlist else "Playlist"
 
     def items(self):
-        return ["Play", "Delete"]
+        return ["Play", "Edit", "Delete"]
 
     def on_select(self, index, item):
         if item == "Play":
             self._play()
+        elif item == "Edit":
+            self._edit()
         elif item == "Delete":
             self._delete()
 
@@ -39,6 +41,12 @@ class PlaylistDetailScene(MenuScene):
         state.queue_index = 0
         _load_and_play(0)
         self.manager.switch("now_playing")
+
+    def _edit(self):
+        builder = self.manager.get("playlist_builder")
+        builder.playlist_name = self.playlist["name"]
+        builder.existing_playlist = self.playlist
+        self.manager.switch("playlist_builder")
 
     def _delete(self):
         name = self.playlist["name"]
