@@ -8,4 +8,5 @@ class ExtrasMenu(MenuScene):
         return ["Bluetooth", "Sleep Timer", "About"]
 
     def on_select(self, index, item):
-        pass  # Phase 8+
+        if item == "About":
+            self.manager.switch("about")
