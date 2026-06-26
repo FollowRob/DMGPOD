@@ -8,6 +8,7 @@ from src.library.scanner import scan, build_index
 from src.scene_manager import SceneManager
 from src.toast import toast
 import src.cart as cart
+import src.volume_overlay as vol
 from src.scenes.main_menu import MainMenu
 from src.scenes.music_menu import MusicMenu
 from src.scenes.extras_menu import ExtrasMenu
@@ -63,11 +64,18 @@ def main():
                 pygame.quit()
                 sys.exit()
             cart.handle_event(event, manager)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFTBRACKET:
+                    vol.bump(-0.05)
+                elif event.key == pygame.K_RIGHTBRACKET:
+                    vol.bump(0.05)
             manager.handle_event(event)
 
         manager.update()
         manager.draw(screen)
+        t.draw_battery(screen, fonts)
         toast.draw(screen, fonts)
+        vol.draw(screen, fonts)
         pygame.display.flip()
         clock.tick(FPS)
 
