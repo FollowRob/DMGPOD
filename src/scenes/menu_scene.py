@@ -156,9 +156,7 @@ class MenuScene(BaseScene):
         if art:
             surface.blit(art, art_rect.topleft)
         else:
-            note = self.fonts["header"].render("♪", True, t.TEXT_DIM)
-            surface.blit(note, (art_rect.centerx - note.get_width() // 2,
-                                art_rect.centery - note.get_height() // 2))
+            t.draw_art_placeholder(surface, art_rect)
 
         # Track info
         info_y = art_rect.bottom + 8

@@ -48,6 +48,26 @@ def draw_battery(surface, fonts, level=1.0):
         pygame.draw.rect(surface, col, (x + 2, y + 2, fill_w, bh - 4), border_radius=1)
 
 
+def draw_art_placeholder(surface, rect):
+    """iPod-style dark grey art placeholder with a drawn music note."""
+    r = pygame.Rect(rect)
+    pygame.draw.rect(surface, (80, 80, 80), r, border_radius=4)
+    col = (160, 160, 160)
+    # Scale note to ~40% of the rect
+    unit = max(4, r.height // 5)
+    cx = r.centerx
+    cy = r.centery + unit // 2
+    # Filled note head (ellipse)
+    head_w, head_h = int(unit * 1.1), int(unit * 0.8)
+    pygame.draw.ellipse(surface, col,
+                        (cx - head_w // 2, cy - head_h // 2, head_w, head_h))
+    # Stem
+    stem_h = int(unit * 1.6)
+    pygame.draw.line(surface, col,
+                     (cx + head_w // 2 - 1, cy),
+                     (cx + head_w // 2 - 1, cy - stem_h), max(1, unit // 5))
+
+
 def load_fonts():
     fonts = {}
     # Try fonts in order of preference — closest to iPod Classic appearance

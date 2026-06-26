@@ -46,9 +46,12 @@ class MainMenu(MenuScene):
             self.manager.switch(dest)
 
     def draw_panel(self, surface, playing=None, track=None):
+        if playing and track:
+            self._draw_mini_player(surface, track)
+            return
+
         cx = t.PANEL_X + t.PANEL_W // 2
         cy = t.HEADER_H + (t.SCREEN_H - t.HEADER_H) // 2
-        # Simple Game Boy pixel-art style icon placeholder
         col = t.TEXT_DIM
         rect = pygame.Rect(cx - 20, cy - 14, 40, 28)
         pygame.draw.rect(surface, col, rect, 2, border_radius=4)
